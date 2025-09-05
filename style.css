@@ -1,0 +1,66 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    perspective: 1200px;
+    color: white;
+    font-family: Arial, sans-serif;
+    user-select: none;
+}
+
+.instructions {
+    position: absolute;
+    top: 20px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.cube {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    transform-style: preserve-3d;
+    animation: cubeRotate 8s infinite linear;
+    cursor: grab;
+}
+
+.cube:active {
+    cursor: grabbing;
+}
+
+.cube-face {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 22px;
+    color: #fff;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.3), 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Couleurs des faces */
+.front  { background: #e74c3c; transform: rotateY(0deg) translateZ(100px); }
+.back   { background: #3498db; transform: rotateY(180deg) translateZ(100px); }
+.right  { background: #2ecc71; transform: rotateY(90deg) translateZ(100px); }
+.left   { background: #f1c40f; transform: rotateY(-90deg) translateZ(100px); }
+.top    { background: #9b59b6; transform: rotateX(90deg) translateZ(100px); }
+.bottom { background: #e67e22; transform: rotateX(-90deg) translateZ(100px); }
+
+/* Animation automatique */
+@keyframes cubeRotate {
+    0%   { transform: rotateX(0deg) rotateY(0deg); }
+    100% { transform: rotateX(360deg) rotateY(360deg); }
+}
+
+.front  { background-image: url('front.jpg'); background-size: cover; transform: rotateY(0deg) translateZ(100px); }
+.back   { background-image: url('back.jpg'); background-size: cover; transform: rotateY(180deg) translateZ(100px); }
+.right  { background-image: url('right.jpg'); background-size: cover; transform: rotateY(90deg) translateZ(100px); }
+.left   { background-image: url('left.jpg'); background-size: cover; transform: rotateY(-90deg) translateZ(100px); }
+.top    { background-image: url('top.jpg'); background-size: cover; transform: rotateX(90deg) translateZ(100px); }
+.bottom { background-image: url('bottom.jpg'); background-size: cover; transform: rotateX(-90deg) translateZ(100px); }
