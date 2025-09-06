@@ -3,113 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
-<title>Sunu Serigne</title>
+<title>Cube 3D Interactif avec Images</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    perspective: 1000px;
+  }
 
+  .cube {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    transform-style: preserve-3d;
+    animation: cubeRotate 8s infinite linear;
+  }
+
+  .cube-face {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border: 2px solid #fff;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .front  { background-image: url("front.jpg"); transform: rotateY(0deg) translateZ(100px); }
+  .back   { background-image: url("back.jpg"); transform: rotateY(180deg) translateZ(100px); }
+  .right  { background-image: url("right.jpg"); transform: rotateY(90deg) translateZ(100px); }
+  .left   { background-image: url("left.jpg"); transform: rotateY(-90deg) translateZ(100px); }
+  .top    { background-image: url("top.jpg"); transform: rotateX(90deg) translateZ(100px); }
+  .bottom { background-image: url("bottom.jpg"); transform: rotateX(-90deg) translateZ(100px); }
+
+  @keyframes cubeRotate {
+    from { transform: rotateX(0deg) rotateY(0deg); }
+    to   { transform: rotateX(360deg) rotateY(360deg); }
+  }
+</style>
 </head>
 <body>
-    <div class="instructions">
-        🎮 Contrôles :<br>
-        ⬆️⬇️⬅️➡️ = Clavier<br>
-        🖱️ Drag & Drop = Souris<br>
-        ␣ (Espace) = Rotation auto
-    </div>
-    <div class="cube" id="cube">
-        <div class="cube-face front"></div>
-        <div class="cube-face back"></div>
-        <div class="cube-face right"></div>
-        <div class="cube-face left"></div>
-        <div class="cube-face top"></div>
-        <div class="cube-face bottom"></div>
-    </div>
+  <div class="cube" id="cube">
+    <div class="cube-face front"></div>
+    <div class="cube-face back"></div>
+    <div class="cube-face right"></div>
+    <div class="cube-face left"></div>
+    <div class="cube-face top"></div>
+    <div class="cube-face bottom"></div>
+  </div>
 
 <script>
 let cube = document.getElementById("cube");
 let rotateX = 0, rotateY = 0;
-let manual = false;
 let autoTimer;
 
-// === Fonction pour relancer auto-rotation ===
 function startAutoRotation() {
-    manual = false;
-    cube.style.animation = "cubeRotate 8s infinite linear";
+  cube.style.animation = "cubeRotate 8s infinite linear";
 }
-
-// === Stop auto et démarrer timer ===
 function stopAutoRotation() {
-    cube.style.animation = "none";
-    manual = true;
-    clearTimeout(autoTimer);
-    autoTimer = setTimeout(startAutoRotation, 3000); // 3s d'inactivité
+  cube.style.animation = "none";
+  clearTimeout(autoTimer);
+  autoTimer = setTimeout(startAutoRotation, 3000);
 }
 
-// === Contrôle clavier ===
 document.addEventListener("keydown", (e) => {
-    stopAutoRotation();
-
-    if (e.key === "ArrowUp") rotateX -= 10;
-    if (e.key === "ArrowDown") rotateX += 10;
-    if (e.key === "ArrowLeft") rotateY -= 10;
-    if (e.key === "ArrowRight") rotateY += 10;
-    if (e.code === "Space") {
-        startAutoRotation();
-        return;
-    }
-
-    cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  stopAutoRotation();
+  if (e.key === "ArrowUp") rotateX -= 10;
+  if (e.key === "ArrowDown") rotateX += 10;
+  if (e.key === "ArrowLeft") rotateY -= 10;
+  if (e.key === "ArrowRight") rotateY += 10;
+  if (e.code === "Space") { startAutoRotation(); return; }
+  cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 });
 
-// === Contrôle souris (drag) ===
 let isDragging = false, startX, startY;
-
 cube.addEventListener("mousedown", (e) => {
-    stopAutoRotation();
-    isDragging = true;
-    startX = e.clientX;
-    startY = e.clientY;
+  stopAutoRotation();
+  isDragging = true;
+  startX = e.clientX;
+  startY = e.clientY;
 });
-
 document.addEventListener("mousemove", (e) => {
-    if (!isDragging) return;
-    let dx = e.clientX - startX;
-    let dy = e.clientY - startY;
-    startX = e.clientX;
-    startY = e.clientY;
-    rotateY += dx * 0.5;
-    rotateX -= dy * 0.5;
-    cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  if (!isDragging) return;
+  let dx = e.clientX - startX;
+  let dy = e.clientY - startY;
+  startX = e.clientX;
+  startY = e.clientY;
+  rotateY += dx * 0.5;
+  rotateX -= dy * 0.5;
+  cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 });
+document.addEventListener("mouseup", () => { isDragging = false; });
 
-document.addEventListener("mouseup", () => {
-    isDragging = false;
-});
-
-// === Contrôle tactile ===
 let touchStartX, touchStartY;
-
 cube.addEventListener("touchstart", (e) => {
-    stopAutoRotation();
-    const touch = e.touches[0];
-    touchStartX = touch.clientX;
-    touchStartY = touch.clientY;
+  stopAutoRotation();
+  const touch = e.touches[0];
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
 });
-
 cube.addEventListener("touchmove", (e) => {
-    const touch = e.touches[0];
-    let dx = touch.clientX - touchStartX;
-    let dy = touch.clientY - touchStartY;
-    touchStartX = touch.clientX;
-    touchStartY = touch.clientY;
-    rotateY += dx * 0.5;
-    rotateX -= dy * 0.5;
-    cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-});
-
-cube.addEventListener("touchend", () => {
-    // Timer déjà lancé dans stopAutoRotation
+  const touch = e.touches[0];
+  let dx = touch.clientX - touchStartX;
+  let dy = touch.clientY - touchStartY;
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
+  rotateY += dx * 0.5;
+  rotateX -= dy * 0.5;
+  cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 });
 </script>
-
-
 </body>
 </html>
